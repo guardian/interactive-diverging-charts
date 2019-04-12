@@ -4,14 +4,14 @@ var chartwidth = 700
 var chartheight = 700
 var centrepoint = chartwidth / 2;
 
-d3.json('https://interactive.guim.co.uk/docsdata-test/1f9kwfxlZNeAQGJ8jl4ea_kcZiIkpzLT4hX0FEaLHbhc.json').then(resp => {
+d3.json('https://interactive.guim.co.uk/docsdata-test/1su5S88vHk1aOxaXTOzR_7WsGqkdzkzIJHAbSOkUjS38.json').then(resp => {
     var input = resp.sheets.output;
 
     var chartsvg = d3.select('.interactive-wrapper')
     .append('svg')
     .attr("class","gv-diverging-chart")
     .attr("width",chartwidth)
-    .attr("height",chartheight);
+    .attr("height",1500);
 
     var xdomain = [0,100]
     var xrange = [0,350]
@@ -60,6 +60,7 @@ d3.json('https://interactive.guim.co.uk/docsdata-test/1f9kwfxlZNeAQGJ8jl4ea_kcZi
                 return 0;
             }
         }) 
+
         inp.posvalues.forEach((v,i) => {
             if (i == 0) {
                 v.cumulative = 0;
@@ -75,8 +76,25 @@ d3.json('https://interactive.guim.co.uk/docsdata-test/1f9kwfxlZNeAQGJ8jl4ea_kcZi
                 v.cumulative = inp.negvalues[i-1].value + inp.posvalues[i-1].cumulative;
             }
         })
+
+        inp.postotal = inp.posvalues.reduce((total,current,) => total + current.value,0)
+        
+        inp.negtotal = inp.negvalues.reduce((total,current,) => total + current.value,0)
+
+
     });
 
+    input.sort((a,b) => {
+        if (a.postotal > b.postotal) {
+            return -1
+        } else if (a.postotal < b.postotal){
+            return 1
+        } else if (a.postotal == b.postotal){
+            return 0
+        }
+    })
+
+    console.log(input)
 
 
 
@@ -115,13 +133,11 @@ d3.json('https://interactive.guim.co.uk/docsdata-test/1f9kwfxlZNeAQGJ8jl4ea_kcZi
     .attr("height",30)
     .attr("width", d => xscale(Math.abs(d.value)))
     .attr("x", d => {
-        console.log(d);
         return centrepoint - (xscale(d.cumulative) + xscale(d.value)) })
     .attr("id",d => d.key)
 
     countries.selectAll('posrect')
-    .data(d => { console.log(d.posvalues)
-        return d.posvalues})
+    .data(d => d.posvalues)
     .enter().append('rect')
     .attr("height",30)
     .attr("width", d => xscale(d.value))

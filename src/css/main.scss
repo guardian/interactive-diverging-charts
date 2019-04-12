@@ -1,0 +1,35 @@
+@import "mq";
+@import "fonts";
+@import "palette";
+// Uncomment for embeds
+//@import "embed";
+// Uncomment for full screen (including immersive article main media)
+//@import "fullscreen";
+.element-atom,
+.interactive-atom {
+    margin: 0 !important;
+}
+
+svg {
+    overflow: visible !important;
+}
+
+#positive-1 {
+    fill: red;
+}
+
+#positive-2 {
+    fill:pink;
+}
+
+#positive-3 {
+    fill: magenta;
+}
+
+#negative-1 {
+    fill: blue;
+}
+
+#negative-2 {
+    fill: lightblue;
+}
